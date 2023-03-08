@@ -1,4 +1,5 @@
 from scapy.all import Ether, ARP, srp, send, conf, get_if_addr, getmacbyip
+from tqdm import tqdm
 from ipaddress import IPv4Address, IPv4Network
 import ifcfg
 import argparse
@@ -39,12 +40,12 @@ def get_default_gateway():
 def get_targets(verbose=True):
     list_targets = []
     ip_list = get_all_ips()
-    for ip in ip_list:
+    for ip in tqdm(ip_list, desc="Scan du réseau"):
         mac = getmacbyip(ip)
-        if verbose:
-            print(f"[+] Mac {ip} : {mac}")
         if mac is not None:
             list_targets.append(ip)
+        if mac is not None and verbose:
+            print(f"[+] Mac {ip} : {mac}")
     return list_targets
 
 
